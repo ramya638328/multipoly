@@ -37,3 +37,12 @@ if st.button("Predict Weather"):
             st.success(f"The predicted weather is: {prediction[0]}")
         except ValueError:
             st.error("Temperature must be a numeric value!")
+            import streamlit as st
+import pickle
+
+uploaded_file = st.file_uploader("Upload your pickle model", type="pkl")
+
+if uploaded_file is not None:
+    model = pickle.load(uploaded_file)
+    st.write("Model loaded successfully!")
+
