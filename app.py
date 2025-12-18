@@ -1,33 +1,33 @@
 import streamlit as st
+import pickle
 import pandas as pd
 
-st.title("Multipoly Excel Data App")
+st.title("Weather Prediction App - Polynomial Regression")
 
-# 1️⃣ File uploader
-uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
+# Load trained model and encoders
+with open("weather_model.pkl", "rb") as f:
+    data = pickle.load(f)
 
-if uploaded_file is not None:
-    # 2️⃣ Read Excel file
-    try:
-        df = pd.read_excel(uploaded_file)
-    except Exception as e:
-        st.error(f"Error reading Excel file: {e}")
-    else:
-        # 3️⃣ Show data preview
-        st.subheader("Preview of your data")
-        st.dataframe(df)
+model = data["model"]
+time_encoder = data["time_encoder"]
+weather_encoder = data["weather_encoder"]
 
-        # 4️⃣ Show columns
-        st.write("Columns in your file:", df.columns.tolist())
+# Hardcoded dataset for display
+df = pd.DataFrame({
+    "Time_of_Day": ["Morning", "Afternoon", "Evening", "Night"],
+    "Temperature": [20, 30, 25, 15]
+})
 
-        # 5️⃣ Basic statistics
-        st.subheader("Basic Statistics")
-        st.write(df.describe())
+st.subheader("Dataset")
+st.dataframe(df)
 
-        # 6️⃣ Example: Select a column to analyze
-        column_to_view = st.selectbox("Select column to view", df.columns)
-        st.write(f"Values in {column_to_view}:")
-        st.write(df[column_to_view])
+# Encode input for prediction
+df["Time_Code"] = time_encoder.transform(df["Time_of_Day"])
+X = df[["Time_Code", "Temperature"]]
 
-else:
-    st.info("Please upload an Excel file to continue.")
+# Predict weather
+df["Predicted_Code"] = model.predict(X).round().astype(int)
+df["Predicted_Weather"] = weather_encoder.inverse_transform(df["Predicted_Code"])
+
+st.subheader("Predicted Weather")
+st.dataframe(df[["Time_of_Day", "Temperature", "Predicted_Weather"]])
