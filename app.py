@@ -1,27 +1,39 @@
 import streamlit as st
+import pandas as pd
 import pickle
-import numpy as np
 
 # Load the trained model
-with open("multipoly.pkl", "rb") as f:
+with open("/mnt/data/multipoly.pkl", "rb") as f:
     model = pickle.load(f)
 
-# Streamlit app title
-st.title("Weather Prediction App 🌤️")
+# Mapping for Time of Day to numeric values
+time_mapping = {
+    "Morning": 0,
+    "Afternoon": 1,
+    "Evening": 2,
+    "Night": 3
+}
 
-st.write("Enter the details below to predict the weather:")
+st.title("Weather Prediction App")
 
-# Input fields
-time_of_day = st.number_input("Time of Day (24-hour format, e.g., 14 for 2 PM):", min_value=0, max_value=23, value=12)
-temperature = st.number_input("Temperature (°C):", value=25.0)
+# User inputs
+time_of_day_input = st.text_input("Enter Time of Day (Morning, Afternoon, Evening, Night):")
+temperature_input = st.text_input("Enter Temperature:")
 
-# Prediction button
+# Check if both inputs are provided
 if st.button("Predict Weather"):
-    # Prepare input for the model
-    input_data = np.array([[time_of_day, temperature]])
-    
-    # Predict
-    prediction = model.predict(input_data)
-    
-    # Display the output
-    st.success(f"The predicted weather is: {prediction[0]}")
+    if time_of_day_input not in time_mapping:
+        st.error("Invalid Time of Day! Use Morning, Afternoon, Evening, or Night.")
+    else:
+        try:
+            temperature_value = float(temperature_input)  # convert temperature to numeric
+            # Prepare input dataframe for model
+            input_df = pd.DataFrame([[time_mapping[time_of_day_input], temperature_value]],
+                                    columns=["TimeOfDay", "Temperature"])
+            
+            # Make prediction
+            prediction = model.predict(input_df)
+            
+            st.success(f"The predicted weather is: {prediction[0]}")
+        except ValueError:
+            st.error("Temperature must be a numeric value!")
