@@ -1,22 +1,41 @@
 import streamlit as st
-import pickle
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
 
-st.title("Multipoly Model Prediction")
+st.title("Weather Prediction App")
 
-uploaded_file = st.file_uploader("Upload your trained model (.pkl)", type="pkl")
+# --- Sample dataset ---
+data = pd.DataFrame({
+    'time_of_day': ['morning', 'afternoon', 'evening', 'night', 'morning', 'afternoon'],
+    'temperature': [15, 25, 20, 10, 18, 30],
+    'weather': ['sunny', 'sunny', 'cloudy', 'rainy', 'cloudy', 'sunny']
+})
 
-if uploaded_file is not None:
-    model = pickle.load(uploaded_file)
-    st.success("Model loaded successfully!")
+# Encode categorical variables
+time_encoder = LabelEncoder()
+weather_encoder = LabelEncoder()
 
-    time_of_day = st.number_input("Enter time of day (hour)", min_value=0, max_value=23)
-    temperature = st.number_input("Enter temperature (°C)")
+data['time_encoded'] = time_encoder.fit_transform(data['time_of_day'])
+data['weather_encoded'] = weather_encoder.fit_transform(data['weather'])
 
-    if st.button("Predict Weather"):
-        try:
-            prediction = model.predict([[time_of_day, temperature]])
-            st.write(f"Predicted Weather: {prediction[0]}")
-        except Exception as e:
-            st.error(f"Prediction failed: {e}")
-else:
-    st.info("Please upload a trained model (.pkl file) to continue.")
+# Train the model
+X = data[['time_encoded', 'temperature']]
+y = data['weather_encoded']
+model = LogisticRegression()
+model.fit(X, y)
+
+# --- User input ---
+time_input = st.selectbox("Select time of day", data['time_of_day'].unique())
+temperature_input = st.number_input("Enter temperature (°C)", value=20, step=1)
+
+# --- Prediction ---
+if st.button("Predict Weather"):
+    # Encode time
+    time_num = time_encoder.transform([time_input])[0]
+    
+    # Predict
+    prediction_encoded = model.predict([[time_num, temperature_input]])[0]
+    prediction_label = weather_encoder.inverse_transform([prediction_encoded])[0]
+    
+    st.success(f"Predicte
