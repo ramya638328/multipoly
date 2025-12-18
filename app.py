@@ -1,48 +1,25 @@
 import streamlit as st
-import pandas as pd
 import pickle
 
-# Load the trained model
-with open("/mnt/data/multipoly.pkl", "rb") as f:
-    model = pickle.load(f)
+st.title("Multipoly Model Prediction")
 
-# Mapping for Time of Day to numeric values
-time_mapping = {
-    "Morning": 0,
-    "Afternoon": 1,
-    "Evening": 2,
-    "Night": 3
-}
+# Use relative path: make sure multipoly.pkl is in the same folder as app.py
+try:
+    with open("multipoly.pkl", "rb") as f:
+        model = pickle.load(f)
+    st.success("Model loaded successfully!")
+except FileNotFoundError:
+    st.error("Error: multipoly.pkl file not found. Make sure it is in the same folder as app.py.")
 
-st.title("Weather Prediction App")
+# Example input for prediction
+time_of_day = st.number_input("Enter time of day (hour)", min_value=0, max_value=23)
+temperature = st.number_input("Enter temperature (°C)")
 
-# User inputs
-time_of_day_input = st.text_input("Enter Time of Day (Morning, Afternoon, Evening, Night):")
-temperature_input = st.text_input("Enter Temperature:")
-
-# Check if both inputs are provided
 if st.button("Predict Weather"):
-    if time_of_day_input not in time_mapping:
-        st.error("Invalid Time of Day! Use Morning, Afternoon, Evening, or Night.")
-    else:
-        try:
-            temperature_value = float(temperature_input)  # convert temperature to numeric
-            # Prepare input dataframe for model
-            input_df = pd.DataFrame([[time_mapping[time_of_day_input], temperature_value]],
-                                    columns=["TimeOfDay", "Temperature"])
-            
-            # Make prediction
-            prediction = model.predict(input_df)
-            
-            st.success(f"The predicted weather is: {prediction[0]}")
-        except ValueError:
-            st.error("Temperature must be a numeric value!")
-            import streamlit as st
-import pickle
-
-uploaded_file = st.file_uploader("Upload your pickle model", type="pkl")
-
-if uploaded_file is not None:
-    model = pickle.load(uploaded_file)
-    st.write("Model loaded successfully!")
+    try:
+        # Replace this with your actual model prediction code
+        prediction = model.predict([[time_of_day, temperature]])
+        st.write(f"Predicted Weather: {prediction[0]}")
+    except Exception as e:
+        st.error(f"Prediction failed: {e}")
 
