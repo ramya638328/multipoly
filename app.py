@@ -1,41 +1,27 @@
 import streamlit as st
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import make_pipeline
+import pickle
+import numpy as np
 
-st.title("Weather Prediction App - Polynomial Regression")
+# Load the trained model
+with open("multipoly.pkl", "rb") as f:
+    model = pickle.load(f)
 
-# 1️⃣ Hardcoded dataset
-data = {
-    "Time_of_Day": ["Morning", "Afternoon", "Evening", "Night", "Morning", "Afternoon", "Evening", "Night"],
-    "Temperature": [20, 30, 25, 15, 22, 32, 27, 18],
-    "Weather": ["Sunny", "Sunny", "Cloudy", "Rainy", "Sunny", "Sunny", "Cloudy", "Rainy"]
-}
-df = pd.DataFrame(data)
-st.subheader("Dataset")
-st.dataframe(df)
+# Streamlit app title
+st.title("Weather Prediction App 🌤️")
 
-# 2️⃣ Encode categorical data
-time_encoder = LabelEncoder()
-weather_encoder = LabelEncoder()
+st.write("Enter the details below to predict the weather:")
 
-df["Time_Code"] = time_encoder.fit_transform(df["Time_of_Day"])
-df["Weather_Code"] = weather_encoder.fit_transform(df["Weather"])
+# Input fields
+time_of_day = st.number_input("Time of Day (24-hour format, e.g., 14 for 2 PM):", min_value=0, max_value=23, value=12)
+temperature = st.number_input("Temperature (°C):", value=25.0)
 
-# 3️⃣ Features and target
-X = df[["Time_Code", "Temperature"]]
-y = df["Weather_Code"]
-
-# 4️⃣ Train polynomial regression model (degree 2)
-model = make_pipeline(PolynomialFeatures(degree=2), LinearRegression())
-model.fit(X, y)
-
-# 5️⃣ Predict weather for dataset
-df["Predicted_Code"] = model.predict(X).round().astype(int)
-df["Predicted_Weather"] = weather_encoder.inverse_transform(df["Predicted_Code"])
-
-# 6️⃣ Display predictions
-st.subheader("Predicted Weather")
-st.dataframe(df[["Time_of_Day", "Temperature", "Predicted_Weather"]])
+# Prediction button
+if st.button("Predict Weather"):
+    # Prepare input for the model
+    input_data = np.array([[time_of_day, temperature]])
+    
+    # Predict
+    prediction = model.predict(input_data)
+    
+    # Display the output
+    st.success(f"The predicted weather is: {prediction[0]}")
