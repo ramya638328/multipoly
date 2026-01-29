@@ -38,4 +38,4 @@ if st.button("Predict Weather"):
     prediction_encoded = model.predict([[time_num, temperature_input]])[0]
     prediction_label = weather_encoder.inverse_transform([prediction_encoded])[0]
     
-    st.success(f"Predicte
+    st.success(f"Predicte")
