@@ -34,9 +34,22 @@ if st.button("Predict Weather"):
     # Encode time
     time_num = time_encoder.transform([time_input])[0]
     
-    # Predict
+    # Predict weather
     prediction_encoded = model.predict([[time_num, temperature_input]])[0]
     prediction_label = weather_encoder.inverse_transform([prediction_encoded])[0]
     
-    st.success(f"Predicte")
-
+    # Temperature-based season condition
+    if temperature_input >= 28:
+        season = "Hot 🌞"
+    elif temperature_input >= 18:
+        season = "Normal 🌤️"
+    else:
+        season = "Cold ❄️"
+    
+    # Final output
+    st.success(
+        f"⏰ Time of Day: {time_input.capitalize()}\n"
+        f"🌡️ Temperature: {temperature_input} °C\n"
+        f"🌦️ Predicted Weather: {prediction_label.capitalize()}\n"
+        f"🔥 Condition: {season}"
+    )
