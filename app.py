@@ -1,55 +1,87 @@
 import streamlit as st
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.linear_model import LogisticRegression
 
-st.title("Weather Prediction App")
+# Page config
+st.set_page_config(
+    page_title="Weather Prediction App",
+    page_icon="🌦️",
+    layout="centered"
+)
 
-# --- Sample dataset ---
-data = pd.DataFrame({
-    'time_of_day': ['morning', 'afternoon', 'evening', 'night', 'morning', 'afternoon'],
-    'temperature': [15, 25, 20, 10, 18, 30],
-    'weather': ['sunny', 'sunny', 'cloudy', 'rainy', 'cloudy', 'sunny']
-})
+# Title
+st.title("🌦️ Weather Prediction App")
+st.caption("An interactive weather prediction system")
 
-# Encode categorical variables
-time_encoder = LabelEncoder()
-weather_encoder = LabelEncoder()
+st.markdown("---")
 
-data['time_encoded'] = time_encoder.fit_transform(data['time_of_day'])
-data['weather_encoded'] = weather_encoder.fit_transform(data['weather'])
+# 🔹 Input Section
+st.subheader("🧾 Input Parameters")
 
-# Train the model
-X = data[['time_encoded', 'temperature']]
-y = data['weather_encoded']
-model = LogisticRegression()
-model.fit(X, y)
+time_of_day = st.selectbox(
+    "⏰ Select Time of Day",
+    ["Morning", "Afternoon", "Evening", "Night"]
+)
 
-# --- User input ---
-time_input = st.selectbox("Select time of day", data['time_of_day'].unique())
-temperature_input = st.number_input("Enter temperature (°C)", value=20, step=1)
+temperature = st.number_input(
+    "🌡️ Enter Temperature (°C)",
+    min_value=-10,
+    max_value=50,
+    value=20
+)
 
-# --- Prediction ---
-if st.button("Predict Weather"):
-    # Encode time
-    time_num = time_encoder.transform([time_input])[0]
-    
-    # Predict weather
-    prediction_encoded = model.predict([[time_num, temperature_input]])[0]
-    prediction_label = weather_encoder.inverse_transform([prediction_encoded])[0]
-    
-    # Temperature-based season condition
-    if temperature_input >= 28:
-        season = "Hot 🌞"
-    elif temperature_input >= 18:
-        season = "Normal 🌤️"
+# Predict button
+predict = st.button("🔍 Predict Weather")
+
+st.markdown("---")
+
+# 🔹 Prediction Logic + UI
+if predict:
+
+    # Simple rule-based logic (replace with ML model later)
+    if temperature < 10:
+        weather = "Cold"
+        emoji = "❄️"
+        bg_color = "#D6EAF8"
+        condition = "Low Temperature"
+    elif temperature <= 30:
+        weather = "Sunny"
+        emoji = "☀️"
+        bg_color = "#FCF3CF"
+        condition = "Normal"
     else:
-        season = "Cold ❄️"
-    
-    # Final output
-    st.success(
-        f"⏰ Time of Day: {time_input.capitalize()}\n"
-        f"🌡️ Temperature: {temperature_input} °C\n"
-        f"🌦️ Predicted Weather: {prediction_label.capitalize()}\n"
-        f"🔥 Condition: {season}"
+        weather = "Hot"
+        emoji = "🔥"
+        bg_color = "#FADBD8"
+        condition = "High Temperature"
+
+    # 🌈 Result Card
+    st.markdown(
+        f"""
+        <div style="
+            background-color:{bg_color};
+            padding:20px;
+            border-radius:12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+        ">
+            <h3>📊 Prediction Result</h3>
+            <p><b>⏰ Time of Day:</b> {time_of_day}</p>
+            <p><b>🌡️ Temperature:</b> {temperature} °C</p>
+            <p><b>{emoji} Predicted Weather:</b> {weather}</p>
+            <p><b>🔥 Condition:</b> {condition}</p>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
+
+    st.markdown("---")
+
+    # 🧠 Explanation Section
+    st.subheader("ℹ️ Why this result?")
+
+    st.info(
+        f"Since the temperature is **{temperature}°C** during the **{time_of_day.lower()}**, "
+        f"the system predicts **{weather} weather** with **{condition.lower()} conditions**."
+    )
+
+# Footer
+st.markdown("---")
+st.caption("🚀 Enhanced frontend for academic & real-world project use")
