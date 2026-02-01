@@ -85,8 +85,4 @@ if predict:
     </div>
     """, unsafe_allow_html=True)
 
-    st.success("✅ Prediction completed successfully")
-
-# Footer
-st.markdown("<br>", unsafe_allow_html=True)
-st.caption("🚀 Frontend enhanced for better user experience")
+    
