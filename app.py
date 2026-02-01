@@ -34,7 +34,6 @@ st.markdown("""
 st.markdown("""
 <div class="header">
     <h1>🌦️ Weather Prediction App</h1>
-    <p>Simple • Smart • User Friendly</p>
 </div>
 """, unsafe_allow_html=True)
 
