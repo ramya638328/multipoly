@@ -7,13 +7,32 @@ st.set_page_config(
     layout="centered"
 )
 
+# Function to change background image
+def set_bg(image_url):
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("{image_url}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Default background
+set_bg("https://images.unsplash.com/photo-1501973801540-537f08ccae7b")  # neutral sky
+
 # Title
 st.title("🌦️ Weather Prediction App")
-st.caption("An interactive weather prediction system")
+st.caption("Visual weather prediction with smart UI")
 
 st.markdown("---")
 
-# 🔹 Input Section
+# Input Section
 st.subheader("🧾 Input Parameters")
 
 time_of_day = st.selectbox(
@@ -28,50 +47,47 @@ temperature = st.number_input(
     value=20
 )
 
-# Predict button
 predict = st.button("🔍 Predict Weather")
 
 st.markdown("---")
 
-# 🔹 Prediction Logic + UI
+# Prediction Section
 if predict:
 
-    # Simple rule-based logic (replace with ML model later)
+    # Simple logic (can be replaced by ML model)
     if temperature < 10:
         weather = "Cold"
         emoji = "❄️"
-        bg_color = "#D6EAF8"
         condition = "Low Temperature"
+        set_bg("https://images.unsplash.com/photo-1482192596544-9eb780fc7f66")
     elif temperature <= 30:
         weather = "Sunny"
         emoji = "☀️"
-        bg_color = "#FCF3CF"
         condition = "Normal"
+        set_bg("https://images.unsplash.com/photo-1502082553048-f009c37129b9")
     else:
         weather = "Hot"
         emoji = "🔥"
-        bg_color = "#FADBD8"
         condition = "High Temperature"
+        set_bg("https://images.unsplash.com/photo-1504384308090-c894fdcc538d")
 
-    # 🌈 Result Card
+    # Result Card
     st.markdown(
         f"""
         <div style="
-            background-color:{bg_color};
-            padding:20px;
-            border-radius:12px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            background-color: rgba(255,255,255,0.85);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
         ">
             <h3>📊 Prediction Result</h3>
             <p><b>⏰ Time of Day:</b> {time_of_day}</p>
             <p><b>🌡️ Temperature:</b> {temperature} °C</p>
-            <p><b>{emoji} Predicted Weather:</b> {weather}</p>
+            <p><b>{emoji} Weather:</b> {weather}</p>
             <p><b>🔥 Condition:</b> {condition}</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown("---")
 
-   
