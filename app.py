@@ -1,65 +1,45 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Weather Prediction App",
-    page_icon="🌦️",
-    layout="centered"
-)
-
-st.title("🌦️ Weather Prediction App")
-st.caption("Visual output based on prediction")
-
-st.markdown("---")
-
-# Inputs
-time_of_day = st.selectbox(
-    "⏰ Select Time of Day",
-    ["Morning", "Afternoon", "Evening", "Night"]
-)
-
-temperature = st.number_input(
-    "🌡️ Enter Temperature (°C)",
-    min_value=-10,
-    max_value=50,
-    value=20
-)
-
-predict = st.button("🔍 Predict")
-
-st.markdown("---")
-
-if predict:
-
-    # Weather logic
-    if temperature < 10:
-        weather = "Rainy"
-        emoji = "🌧️"
-        image_path = "images/rainy.jpg"
-    elif temperature <= 30:
-        weather = "Sunny"
-        emoji = "☀️"
-        image_path = "images/sunny.jpg"
-    else:
-        weather = "Hot"
-        emoji = "🔥"
-        image_path = "images/hot.jpg"
-
-    # Result card
+def set_bg(image_url):
     st.markdown(
         f"""
-        <div style="
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
-        ">
-            <h3>📊 Prediction Result</h3>
-            <p><b>⏰ Time of Day:</b> {time_of_day}</p>
-            <p><b>🌡️ Temperature:</b> {temperature} °C</p>
-            <p><b>{emoji} Weather:</b> {weather}</p>
-        </div>
+        <style>
+        .stApp {{
+            background-image: url("{image_url}");
+            background-size: cover;
+            background-position: center;
+        }}
+        </style>
         """,
         unsafe_allow_html=True
     )
 
+# Inputs
+st.title("🌦️ Smart Weather Prediction")
 
+time_of_day = st.selectbox("⏰ Select Time of Day", 
+                            ["Morning", "Afternoon", "Evening", "Night"])
+temperature = st.number_input("🌡️ Enter Temperature (°C)", min_value=0, max_value=50)
+
+# Background selection
+if time_of_day == "Morning":
+    set_bg("https://images.unsplash.com/photo-1502082553048-f009c37129b9")
+elif time_of_day == "Afternoon":
+    set_bg("https://images.unsplash.com/photo-1501785888041-af3ef285b470")
+elif time_of_day == "Evening":
+    set_bg("https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d")
+else:
+    set_bg("https://images.unsplash.com/photo-1504384308090-c894fdcc538d")
+
+# Predict button
+if st.button("🔮 Predict"):
+    weather = "Sunny" if temperature > 20 else "Cold"
+
+    st.markdown("## 📊 Prediction Result")
+    st.success(f"""
+    ⏰ Time of Day: **{time_of_day}**  
+    🌡️ Temperature: **{temperature} °C**  
+    ☀️ Weather: **{weather}**
+    """)
+
+    st.info("ℹ️ The prediction is based on temperature and time of day.")
