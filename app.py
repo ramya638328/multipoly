@@ -62,16 +62,4 @@ if predict:
         unsafe_allow_html=True
     )
 
-    st.markdown("### 🌄 Visual Representation")
-    st.image(
-        image_path,
-        caption=f"{weather} condition representation",
-        use_container_width=True
-    )
 
-    st.info(
-        "The displayed image visually represents the predicted weather condition."
-    )
-
-st.markdown("---")
-st.caption("🚀 Image-based output for better user experience")
