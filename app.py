@@ -74,14 +74,4 @@ if predict:
 
     st.markdown("---")
 
-    # 🧠 Explanation Section
-    st.subheader("ℹ️ Why this result?")
-
-    st.info(
-        f"Since the temperature is **{temperature}°C** during the **{time_of_day.lower()}**, "
-        f"the system predicts **{weather} weather** with **{condition.lower()} conditions**."
-    )
-
-# Footer
-st.markdown("---")
-st.caption("🚀 Enhanced frontend for academic & real-world project use")
+   
