@@ -48,6 +48,4 @@ if predict:
         """
     )
 
-    st.caption(
-        "ℹ️ Prediction is based on temperature range and time of day."
-    )
+   
