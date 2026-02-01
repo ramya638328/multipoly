@@ -2,101 +2,91 @@ import streamlit as st
 
 # Page config
 st.set_page_config(
-    page_title="Weather Prediction App",
+    page_title="Weather Prediction",
     page_icon="🌦️",
     layout="centered"
 )
 
-# Function to change background image
-def set_bg(image_url):
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("{image_url}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+# 🌈 Gradient Header
+st.markdown("""
+<style>
+.header {
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+.card {
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+}
+.result {
+    font-size: 22px;
+    font-weight: bold;
+}
+</style>
+""", unsafe_allow_html=True)
 
-# Default background
-set_bg("https://images.unsplash.com/photo-1501973801540-537f08ccae7b")  # neutral sky
+st.markdown("""
+<div class="header">
+    <h1>🌦️ Weather Prediction App</h1>
+    <p>Simple • Smart • User Friendly</p>
+</div>
+""", unsafe_allow_html=True)
 
-# Title
-st.title("🌦️ Weather Prediction App")
-st.caption("Visual weather prediction with smart UI")
-
-st.markdown("---")
-
-# Input Section
-st.subheader("🧾 Input Parameters")
+# 🧾 Input Card
+st.markdown("<div class='card'>", unsafe_allow_html=True)
+st.subheader("🧾 Enter Weather Details")
 
 time_of_day = st.selectbox(
-    "⏰ Select Time of Day",
+    "⏰ Time of Day",
     ["Morning", "Afternoon", "Evening", "Night"]
 )
 
 temperature = st.number_input(
-    "🌡️ Enter Temperature (°C)",
+    "🌡️ Temperature (°C)",
     min_value=-10,
     max_value=50,
     value=20
 )
 
-predict = st.button("🔍 Predict Weather")
+predict = st.button("🔍 Predict")
+st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown("---")
-
-# Prediction Section
+# 📊 Result Card
 if predict:
 
-    # Simple logic (can be replaced by ML model)
     if temperature < 10:
         weather = "Cold"
         emoji = "❄️"
-        condition = "Low Temperature"
-        set_bg("https://images.unsplash.com/photo-1482192596544-9eb780fc7f66")
+        note = "Low temperature detected"
     elif temperature <= 30:
         weather = "Sunny"
         emoji = "☀️"
-        condition = "Normal"
-        set_bg("https://images.unsplash.com/photo-1502082553048-f009c37129b9")
+        note = "Normal temperature range"
     else:
         weather = "Hot"
         emoji = "🔥"
-        condition = "High Temperature"
-        set_bg("https://images.unsplash.com/photo-1504384308090-c894fdcc538d")
+        note = "High temperature detected"
 
-    # Result Card
-    st.markdown(
-        f"""
-        <div style="
-            background-color: rgba(255,255,255,0.85);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-        ">
-            <h3>📊 Prediction Result</h3>
-            <p><b>⏰ Time of Day:</b> {time_of_day}</p>
-            <p><b>🌡️ Temperature:</b> {temperature} °C</p>
-            <p><b>{emoji} Weather:</b> {weather}</p>
-            <p><b>🔥 Condition:</b> {condition}</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Explanation
-    st.markdown("### ℹ️ Why this result?")
-    st.info(
-        f"Based on the temperature of **{temperature}°C** during the **{time_of_day.lower()}**, "
-        f"the system predicts **{weather} weather**."
-    )
+    st.markdown(f"""
+    <div class="card">
+        <h3>📊 Prediction Result</h3>
+        <p class="result">{emoji} {weather}</p>
+        <p>⏰ <b>Time:</b> {time_of_day}</p>
+        <p>🌡️ <b>Temperature:</b> {temperature} °C</p>
+        <p>ℹ️ {note}</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.success("✅ Prediction completed successfully")
 
 # Footer
-st.markdown("---")
-st.caption("🚀 Dynamic background UI for enhanced user experience")
+st.markdown("<br>", unsafe_allow_html=True)
+st.caption("🚀 Frontend enhanced for better user experience")
