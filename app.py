@@ -1,45 +1,53 @@
 import streamlit as st
 
-def set_bg(image_url):
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("{image_url}");
-            background-size: cover;
-            background-position: center;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+st.set_page_config(page_title="Weather Prediction", layout="centered")
 
-# Inputs
 st.title("🌦️ Smart Weather Prediction")
 
-time_of_day = st.selectbox("⏰ Select Time of Day", 
-                            ["Morning", "Afternoon", "Evening", "Night"])
-temperature = st.number_input("🌡️ Enter Temperature (°C)", min_value=0, max_value=50)
+# Input Card
+with st.container():
+    st.subheader("🧾 Input Parameters")
+    time_of_day = st.selectbox(
+        "⏰ Time of Day",
+        ["Morning", "Afternoon", "Evening", "Night"]
+    )
+    temperature = st.number_input(
+        "🌡️ Temperature (°C)",
+        min_value=0,
+        max_value=50
+    )
 
-# Background selection
-if time_of_day == "Morning":
-    set_bg("https://images.unsplash.com/photo-1502082553048-f009c37129b9")
-elif time_of_day == "Afternoon":
-    set_bg("https://images.unsplash.com/photo-1501785888041-af3ef285b470")
-elif time_of_day == "Evening":
-    set_bg("https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d")
-else:
-    set_bg("https://images.unsplash.com/photo-1504384308090-c894fdcc538d")
+predict = st.button("🔮 Predict Weather")
 
-# Predict button
-if st.button("🔮 Predict"):
-    weather = "Sunny" if temperature > 20 else "Cold"
+if predict:
+    # Simple logic
+    if temperature >= 30:
+        weather = "Hot"
+        color = "error"
+    elif temperature >= 20:
+        weather = "Sunny"
+        color = "success"
+    else:
+        weather = "Cold"
+        color = "info"
 
-    st.markdown("## 📊 Prediction Result")
-    st.success(f"""
-    ⏰ Time of Day: **{time_of_day}**  
-    🌡️ Temperature: **{temperature} °C**  
-    ☀️ Weather: **{weather}**
-    """)
+    st.markdown("---")
+    st.subheader("📊 Prediction Result")
 
-    st.info("ℹ️ The prediction is based on temperature and time of day.")
+    if color == "success":
+        st.success(f"☀️ Weather: {weather}")
+    elif color == "error":
+        st.error(f"🔥 Weather: {weather}")
+    else:
+        st.info(f"❄️ Weather: {weather}")
+
+    st.markdown(
+        f"""
+        **⏰ Time of Day:** {time_of_day}  
+        **🌡️ Temperature:** {temperature} °C  
+        """
+    )
+
+    st.caption(
+        "ℹ️ Prediction is based on temperature range and time of day."
+    )
