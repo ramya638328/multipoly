@@ -3,7 +3,7 @@ import streamlit as st
 # Page config
 st.set_page_config(
     page_title="Weather Prediction",
-    page_icon="🌦️",
+   
     layout="centered"
 )
 
@@ -33,7 +33,7 @@ st.markdown("""
 
 st.markdown("""
 <div class="header">
-    <h1>🌦️ Weather Prediction App</h1>
+    <h1> Weather Prediction App</h1>
 </div>
 """, unsafe_allow_html=True)
 
