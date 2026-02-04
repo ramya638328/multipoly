@@ -39,7 +39,7 @@ st.markdown("""
 
 # 🧾 Input Card
 st.markdown("<div class='card'>", unsafe_allow_html=True)
-st.subheader("🧾 Enter Weather Details")
+st.subheader(" Enter Weather Details")
 
 time_of_day = st.selectbox(
     " Time of Day",
@@ -77,7 +77,7 @@ if predict:
     st.markdown(f"""
     <div class="card">
         <h3> Prediction Result</h3>
-        <p class="result">{emoji} {weather}</p>
+        <p class="result"> {weather}</p>
         <p> <b>Time:</b> {time_of_day}</p>
         <p> <b>Temperature:</b> {temperature} °C</p>
         <p> {note}</p>
